@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html >
+<head>
+ 
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">     
+<meta charset="utf-8">             
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">     
+<meta content="yes" name="apple-mobile-web-app-capable">     
+<meta content="black" name="apple-mobile-web-app-status-bar-style">     
+<meta content="telephone=no" name="format-detection">
+
+  <title>物流系统查询</title>
+  
+  
+  <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="static/style.css">
+
+  
+<html>
+<head>
+<script src="static/jquery-1.8.0.js"></script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    
+
+        $("#display").empty() ;
+           
+         var a=document.getElementById("inputid").value;	
+          $.getJSON("logquery?logid="+a,function(result){
+			$.each(result, function(i, field){
+                                if (i == "data")
+                                for (var j =0; j<field.length;j++)
+				$("#display").append("<p>" +field[j] + "</p>");
+                                if (i=="code"){
+                                    if (field != 0)
+				       $("#display").append("<p>" + "暂无此物流单信息，稍后再试" + "</p>");
+                                }
+			});
+		});
+
+
+
+  });
+});
+</script>
+</head>
+
+<body>
+    <div class="wrapper">
+    <form class="form-signin">       
+      <h2 class="form-signin-heading">输入物流单号</h2>
+    
+ <input type="text" class="form-control input-lg" id="inputid" name="logid" placeholder="物流单号" required="required" />      
+    </form>
+    <div style="height:10px;clear:both;display:block"></div>
+    <div align=center>
+    <button  style="cursor:pointer;vertical-align: middle;height:31px;" >查询</button>   
+    </div>
+  </div>
+  <div id="display" align="center"></div>
+  
+</body>
+</html>
