@@ -70,18 +70,15 @@ class LogoutHandler(BaseHandler):
         self.clear_cookie("username")
         self.redirect("/login")
 
-class luruHandler(BaseHandler):
+class uploadHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('index.html', user=self.current_user)
+        self.render('upload.html', user=self.current_user)
 
     def post(self):
-        logid = self.get_argument("logid")
-        info = self.get_argument("info")
-        #user=self.get_secure_cookie('username')
-        #print info,logid,user
-        redi.set_logistics_info(logid, info)
-        self.render('luru.html', user=self.current_user, info=info)
+        title = self.get_argument("title")
+        tag = self.get_argument("tag")
+        self.render('query.html')
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -95,7 +92,7 @@ if __name__ == "__main__":
 
     application = tornado.web.Application([
         (r'/', WelcomeHandler),
-        (r'/luru', luruHandler),
+        (r'/upload', uploadHandler),
         (r'/logquery', LogqueryHandler),
         (r'/query', QueryHandler),
         (r'/login', LoginHandler),
