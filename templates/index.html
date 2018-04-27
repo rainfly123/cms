@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="dist/sidebar-menu.css">
+<link rel="stylesheet" href="static/sidebar-menu.css">
 <style type="text/css">
 .main-sidebar{
 	position: absolute;
@@ -40,7 +40,17 @@
 	
 	  
 	 
-	  <li><a href="#"><i class="fa fa-book"></i> <span>回看节目</span></a></li>
+	  <li class="treeview">
+		<a href="#">
+		  <i class="fa fa-dashboard"></i> <span>回看节目</span> <i class="fa fa-angle-left pull-right"></i>
+		</a>
+
+		<ul class="treeview-menu">
+		  <li><a href="#"><i class="fa fa-circle-o"></i>中央一套</a></li>
+		  <li><a href="#"><i class="fa fa-circle-o"></i></a></li>
+		</ul>
+      </li>
+
 	  <li class="header">日志收集</li>
 	  <li><a href="http://www.baidu.com" target="_parent"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
 	  <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
@@ -50,14 +60,14 @@
  </aside>
 
 <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script src="./dist/sidebar-menu.js"></script>
+<script src="static/sidebar-menu.js"></script>
 <script>
 $.sidebarMenu($('.sidebar-menu'))
 </script>
 
-<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';overflow-y:scroll;overflow-x:hidden;">
 
-<table border="1" align="right" width=85% style="border-collapse:collapse;" >
+<table border="1" align="right" width=84% style="border-collapse:collapse;" >
 <caption>SLP 直播平台</caption>
   <tr>
     <th>编号</th>
@@ -66,6 +76,7 @@ $.sidebarMenu($('.sidebar-menu'))
     <th>分类</th>
     <th>子分类</th>
     <th>标签</th>
+    <th>操作</th>
   </tr>
   <tr>
     <td align="right">1</td>
@@ -74,6 +85,13 @@ $.sidebarMenu($('.sidebar-menu'))
     <td align="left">新闻</td>
     <td align="left">军事</td>
     <td align="left">朝鲜 原子弹</td>
+    <td align="left"> 
+         <table>
+           <tr>
+            <td><a href="http://www.baidu.com/edit?id=x">编辑</a></td>
+            <td> <a href="http://www.baidu.com/delete?id=x">删除</a></td>
+           </tr>
+         </table>
   </tr>
 </table>
 <p>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a></p>
