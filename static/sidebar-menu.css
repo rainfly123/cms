@@ -65,3 +65,9 @@
           width: auto; }
       .sidebar-menu .treeview-menu > li.active > a, .sidebar-menu .treeview-menu > li > a:hover {
         color: #fff; }
+th,td {
+padding: 0.3em 1em;
+}
+table {
+border-collapse:collapse;
+}
