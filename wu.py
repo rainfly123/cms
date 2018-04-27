@@ -23,7 +23,8 @@ class LoginHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
-        truepassword = redi.get_user_password(username)
+        #truepassword = redi.get_user_password(username)
+        truepassword = password
         if password == truepassword:
             self.set_secure_cookie("username", username, expires_days=None)
             self.redirect("/")
@@ -33,11 +34,15 @@ class LoginHandler(BaseHandler):
 class WelcomeHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('index.html', user=self.current_user)
+        self.render('pvr.html', user=self.current_user)
 
-class QueryHandler(BaseHandler):
+class pvrHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
-        self.render("query.html")
+        gid = self.get_argument("gid")
+        if gid is None:
+            gid = "cctv1"
+        self.render("pvr.html", gid)
 
 newurl = "http://logistics.chinadnhh.com/kdapi/kdapi.php?wuliuid="
 class LogqueryHandler(BaseHandler):
@@ -94,7 +99,7 @@ if __name__ == "__main__":
         (r'/', WelcomeHandler),
         (r'/upload', uploadHandler),
         (r'/logquery', LogqueryHandler),
-        (r'/query', QueryHandler),
+        (r'/pvr', pvrHandler),
         (r'/login', LoginHandler),
         (r'/logout', LogoutHandler)
     ], **settings)
