@@ -28,17 +28,13 @@
 <section  class="sidebar">
 	<ul class="sidebar-menu">
 	  <li class="header">导航栏</li>
-	  <li class="treeview">
-		<a href="#">
+	  	  <li class="treeview">
+		<a href="/">
 		  <i class="fa fa-dashboard"></i> <span>直播频道</span> <i class="fa fa-angle-left pull-right"></i>
 		</a>
-		<ul class="treeview-menu">
-		  <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-		  <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-		</ul>
 	  </li>
 	
-	  
+
 	 
 	  <li class="treeview">
 		<a href="#">
@@ -46,8 +42,9 @@
 		</a>
 
 		<ul class="treeview-menu">
-		  <li><a href="#"><i class="fa fa-circle-o"></i>中央一套</a></li>
-		  <li><a href="#"><i class="fa fa-circle-o"></i></a></li>
+          {% for chan in channels %}
+		  <li><a href="pvr?gid={{chan['gid']}}"><i class="fa fa-circle-o"></i>{{chan['name']}}</a></li>
+          {% end %}
 		</ul>
       </li>
 
@@ -79,22 +76,24 @@ $.sidebarMenu($('.sidebar-menu'))
     <th>标签</th>
     <th>操作</th>
   </tr>
+ {% for program in programs %}
   <tr>
-    <td align="right">1</td>
-    <td align="center"><img src="a.jpg" height="100" width="100" /></td>
-    <td align="left">新闻联播</td>
-    <td align="left">2018-12-2210:20</td>
-    <td align="left">新闻</td>
-    <td align="left">军事</td>
-    <td align="left">朝鲜 原子弹</td>
+    <td align="right">{{program['id']}}</td>
+    <td align="center"><img src="{{program['url']}}" height="100" width="100" /></td>
+    <td align="left">{{program['program_name']}}</td>
+    <td align="left">{{program['time']}}</td>
+    <td align="left">{{program['class']}}</td>
+    <td align="left">{{program['subclass']}}</td>
+    <td align="left">{{program['flag']}}</td>
     <td align="left"> 
          <table>
            <tr>
-            <td><a href="http://www.baidu.com/edit?id=x">编辑</a></td>
-            <td> <a href="http://www.baidu.com/delete?id=x">删除</a></td>
+            <td><a href="pedit?id={{program['id']}}">编辑</a></td>
+            <td> <a href="pdelete?id={{program['id']}}">删除</a></td>
            </tr>
          </table>
   </tr>
+  {% end %}
 </table>
 <p>来源：<a href="http://www.southtv.cn/" target="_blank">南方无线</a></p>
 </div>

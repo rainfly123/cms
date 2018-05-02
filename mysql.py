@@ -33,37 +33,6 @@ _dbManager = DbManager()
 def getConn():
     return _dbManager.getConn()
 
-def QueryEPG():
-    channels = list()
-    results= dict()
-    
-    con = getConn()
-    cur =  con.cursor()
-    sql = "select gid from live where enable_vod = 1"
-    cur.execute(sql)
-    res = cur.fetchall()
-    for channel in res:
-        channels.append(channel[0])
-
-    for channel in channels:
-        programs = list()
-        sql = "select id, time, store_path from vod where gid = '{0}' and url is NULL order by time ".format(channel)
-        cur.execute(sql)
-        res = cur.fetchall()
-        for r in res:
-            program = dict()
-            program['mysqlid'] = r[0]
-            program['time'] = r[1]
-            program['store_path'] = r[2]
-            program['gid'] =  channel
-            programs.append(program)
-
-        results[channel] = programs
-
-    cur.close()
-    con.close()
-    return results
-
 def QueryPrograms(gid):
     results = list()
     i = 0
@@ -80,7 +49,7 @@ def QueryPrograms(gid):
         program['id'] = i
         program['program_name'] = item[0]
         program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
-        program['url'] = item[2]
+        program['url'] = item[2].replace(".m3u8", ".jpg")
         program['class'] = item[3]
         program['subclass'] = item[4]
         program['flag'] = item[5]
@@ -131,7 +100,6 @@ def QueryLiveChannels(gid=None):
 
 
 if __name__ ==  '__main__':
-    print QueryEPG()
     print QueryPrograms("cctv1")
     print QueryLiveChannels()
     print QueryLiveChannels("cctv1")

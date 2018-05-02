@@ -44,7 +44,9 @@ class pvrHandler(BaseHandler):
         gid = self.get_argument("gid")
         if gid is None:
             gid = "cctv1"
-        self.render("pvr.html", gid)
+        chan = mysql.QueryLiveChannels()
+        prog = mysql.QueryPrograms(gid)
+        self.render("pvr.html", channels = chan, programs = prog)
 
 class liveHandler(BaseHandler):
     @tornado.web.authenticated
