@@ -9,6 +9,7 @@ import tornado.gen
 import os.path
 import json
 import redi
+import mysql
 
 from tornado.options import define, options
 define("port", default=1111, help="run on the given port", type=int)
@@ -34,7 +35,8 @@ class LoginHandler(BaseHandler):
 class WelcomeHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('pvr.html', user=self.current_user)
+        chan = mysql.QueryLiveChannels()
+        self.render("live.html", channels = chan)
 
 class pvrHandler(BaseHandler):
     @tornado.web.authenticated
@@ -43,6 +45,16 @@ class pvrHandler(BaseHandler):
         if gid is None:
             gid = "cctv1"
         self.render("pvr.html", gid)
+
+class liveHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        gid = self.get_argument("gid")
+        if gid is None:
+            gid = "cctv1"
+        chan = mysql.QueryLiveChannels(gid)
+        self.render("live.html", channels = chan)
+
 
 newurl = "http://logistics.chinadnhh.com/kdapi/kdapi.php?wuliuid="
 class LogqueryHandler(BaseHandler):
@@ -100,6 +112,7 @@ if __name__ == "__main__":
         (r'/upload', uploadHandler),
         (r'/logquery', LogqueryHandler),
         (r'/pvr', pvrHandler),
+        (r'/live', liveHandler),
         (r'/login', LoginHandler),
         (r'/logout', LogoutHandler)
     ], **settings)

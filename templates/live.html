@@ -33,8 +33,9 @@
 		  <i class="fa fa-dashboard"></i> <span>直播频道</span> <i class="fa fa-angle-left pull-right"></i>
 		</a>
 		<ul class="treeview-menu">
-		  <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-		  <li><a href="#"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+          {% for chan in channels %}
+		  <li><a href="#{{chan['id']}}"><i class="fa fa-circle-o"></i>{{chan['name']}}</a></li>
+          {% end %}
 		</ul>
 	  </li>
 	
@@ -46,8 +47,9 @@
 		</a>
 
 		<ul class="treeview-menu">
-		  <li><a href="#"><i class="fa fa-circle-o"></i>中央一套</a></li>
-		  <li><a href="#"><i class="fa fa-circle-o"></i></a></li>
+          {% for chan in channels %}
+		  <li><a href="pvr?gid={{chan['gid']}}"><i class="fa fa-circle-o"></i>{{chan['name']}}</a></li>
+          {% end %}
 		</ul>
       </li>
 
@@ -77,20 +79,22 @@ $.sidebarMenu($('.sidebar-menu'))
     <th>全局标识</th>
     <th>操作</th>
   </tr>
-  <tr>
-    <td align="right">1</td>
-    <td align="center"><img src="a.jpg" height="100" width="100" /></td>
-    <td align="left">新闻联播</td>
-    <td align="left">是</td>
-    <td align="left">cctv1</td>
+  {% for chan in channels %}
+  <tr id="{{chan['id']}}">
+    <td align="right">{{chan['id']}}</td>
+    <td align="center"><img src="{{chan['logo']}}" height="100" width="100" /></td>
+    <td align="left">{{chan['name']}}</td>
+    <td align="left">{{chan['enable_vod']}}</td>
+    <td align="left">{{chan['gid']}}</td>
     <td align="left"> 
          <table>
            <tr>
-            <td><a href="http://www.baidu.com/edit?id=x">编辑</a></td>
-            <td> <a href="http://www.baidu.com/delete?id=x">下线</a></td>
+            <td><a href="edit?gid={{chan['gid']}}">编辑</a></td>
+            <td> <a href="delete?gid={{chan['gid']}}">下线</a></td>
            </tr>
          </table>
   </tr>
+  {% end %}
 </table>
 <p>来源：<a href="http://www.southtv.cn/" target="_blank">南方无线</a></p>
 </div>

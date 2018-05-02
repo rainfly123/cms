@@ -64,73 +64,66 @@ def QueryEPG():
     con.close()
     return results
 
-def UpdatePVRUrl(mysqlid, url):
-    con = getConn()
-    cur =  con.cursor()
-
-    sql = "update vod set url = '{0}' where id = '{1}' ".format(url, mysqlid)
-    cur.execute(sql)
-    con.commit()
-
-    cur.close()
-    con.close()
-
-def DeletePVRUrl(mysqlid):
-    con = getConn()
-    cur =  con.cursor()
-
-    sql = "delete from vod where id = '{0}' ".format(mysqlid)
-    cur.execute(sql)
-    con.commit()
-
-    cur.close()
-    con.close()
-
 def QueryPrograms(gid):
     results = list()
+    i = 0
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select time, program_name, url from vod where gid = '{0}' ".format(gid)
+    sql = "select program_name, time, url, class, subclass, flag from vod where gid = '{0}' and url != '' ".format(gid)
     cur.execute(sql)
     res = cur.fetchall()
     now = datetime.datetime.now()
 
     for item in res:
         program = dict()
-        program['time'] = item[0].strftime("%Y-%m-%d %H:%M")
-        program['program_name'] = item[1]
+        program['id'] = i
+        program['program_name'] = item[0]
+        program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
         program['url'] = item[2]
-        program['type'] = 0 #vod
-        if item[2] is None:
-            if item[0] > now:
-                program['type'] = 2 #reserve
-            else:
-                program['type'] = 1  #live
+        program['class'] = item[3]
+        program['subclass'] = item[4]
+        program['flag'] = item[5]
         results.append(program)
+        i += 1
+
+    for item in results:
+        sql = "select class.name, subclass.name from class, subclass where class.class =%d and class.class=subclass.class and\
+            subclass.class=%d"%(item['class'],item['subclass'])
+        cur.execute(sql)
+        res = cur.fetchall()
+        for ite in res:
+            item['class'] = ite[0]
+            item['subclass'] = ite[1]
+
     cur.close()
     con.close()
     return results
 
-def QueryLiveChannels():
+def QueryLiveChannels(gid=None):
     results = list()
+    i = 0
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select gid, name, url, enable_vod, logo from live"
+    if gid is None:
+        sql = "select gid, name, url, enable_vod, logo from live"
+    else:
+        sql = "select gid, name, url, enable_vod, logo from live where gid='%s'"%(gid)
     cur.execute(sql)
     res = cur.fetchall()
     now = datetime.datetime.now()
 
     for item in res:
         program = dict()
+        program['id'] = i
         program['gid'] = item[0]
         program['name'] = item[1]
         program['url'] = item[2]
         program['enable_vod'] =  item[3]
         program['logo'] =  item[4]
-
         results.append(program)
+        i+=1
     cur.close()
     con.close()
     return results
@@ -141,3 +134,4 @@ if __name__ ==  '__main__':
     print QueryEPG()
     print QueryPrograms("cctv1")
     print QueryLiveChannels()
+    print QueryLiveChannels("cctv1")
