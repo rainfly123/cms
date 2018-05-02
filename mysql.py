@@ -122,14 +122,14 @@ def QuerysubClass(classid):
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select class, name from subclass where class=%d"%classid
+    sql = "select subclass, name from subclass where class=%d"%classid
     cur.execute(sql)
     res = cur.fetchall()
     now = datetime.datetime.now()
 
     for item in res:
         program = dict()
-        program['class'] = item[0]
+        program['subclass'] = item[0]
         program['name'] = item[1]
         results.append(program)
     cur.close()

@@ -11,6 +11,7 @@
 <style> 
 </style> 
 </head> 
+<script src="static/jquery-2.1.1.min.js" type="text/javascript"></script>
 <body> 
 <div style="height:10%"></div>
 <div style="text-align:center" >
@@ -18,10 +19,15 @@
 <p>视频标题：<input type="text" name="title"/> </p>
 <p>视频标签：<input type="text" name="flag"/> </p>
 <p>分类： &nbsp &nbsp
- <select name="class">
+ <select name="class" id="class">
   {% for cls in classname %}
   <option value ="{{cls['class']}}"> &nbsp &nbsp{{cls['name']}}</option>
   {% end %}
+</select>
+</p>
+
+<p>子分类： &nbsp &nbsp
+ <select name="subclass" id="subclass">
 </select>
 </p>
 <p><input type="file" name="video"/> </p>
@@ -29,6 +35,21 @@
 <p><input type="submit" value="上传"/> </p>
 </form>
 </div>
+<script>
+$("#class").change(function(){//code...
+svalue=$("#class").val();
+$("#subclass").empty();
+$.get("subclass?class=" + svalue, function(data){
+    var dataObj=eval("("+data+")");
+    subnames = dataObj['data'];
+     $(subnames).each(function(i,n){
+    $("#subclass").append("<option value="+n['subclass'] + ">" + n['name'] + "</option>");
+  });
+    
+  });
+
+}); 
+</script>
 
 </body> 
 </html>

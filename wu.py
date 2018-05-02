@@ -89,6 +89,13 @@ class LogoutHandler(BaseHandler):
         self.clear_cookie("username")
         self.redirect("/login")
 
+class subclassHandler(BaseHandler):
+    def get(self):
+        val = self.get_argument("class")
+        r = mysql.QuerysubClass(int(val))
+        self.write(json.dumps({"code":0, "msg":"ok", "data":r}))
+
+
 class uploadHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -115,6 +122,7 @@ if __name__ == "__main__":
         (r'/upload', uploadHandler),
         (r'/logquery', LogqueryHandler),
         (r'/pvr', pvrHandler),
+        (r'/subclass', subclassHandler),
         (r'/live', liveHandler),
         (r'/login', LoginHandler),
         (r'/logout', LogoutHandler)
