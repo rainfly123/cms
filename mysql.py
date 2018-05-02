@@ -39,7 +39,7 @@ def QueryPrograms(gid):
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select program_name, time, url, class, subclass, flag from vod where gid = '{0}' and url != '' ".format(gid)
+    sql = "select program_name, time, url, class, subclass, flag, id from vod where gid = '{0}' and url != '' ".format(gid)
     cur.execute(sql)
     res = cur.fetchall()
     now = datetime.datetime.now()
@@ -53,6 +53,7 @@ def QueryPrograms(gid):
         program['class'] = item[3]
         program['subclass'] = item[4]
         program['flag'] = item[5]
+        program['pid'] = item[6]
         results.append(program)
         i += 1
 
