@@ -92,7 +92,8 @@ class LogoutHandler(BaseHandler):
 class uploadHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('upload.html', user=self.current_user)
+        classname = mysql.QueryClass()
+        self.render('upload.html', user=self.current_user, classname = classname)
 
     def post(self):
         title = self.get_argument("title")

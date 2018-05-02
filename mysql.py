@@ -98,9 +98,49 @@ def QueryLiveChannels(gid=None):
     con.close()
     return results
 
+def QueryClass():
+    results = list()
+    con = getConn()
+    cur =  con.cursor()
+
+    sql = "select class, name from class  "
+    cur.execute(sql)
+    res = cur.fetchall()
+    now = datetime.datetime.now()
+
+    for item in res:
+        program = dict()
+        program['class'] = item[0]
+        program['name'] = item[1]
+        results.append(program)
+    cur.close()
+    con.close()
+    return results
+
+def QuerysubClass(classid):
+    results = list()
+    con = getConn()
+    cur =  con.cursor()
+
+    sql = "select class, name from subclass where class=%d"%classid
+    cur.execute(sql)
+    res = cur.fetchall()
+    now = datetime.datetime.now()
+
+    for item in res:
+        program = dict()
+        program['class'] = item[0]
+        program['name'] = item[1]
+        results.append(program)
+    cur.close()
+    con.close()
+    return results
+
 
 
 if __name__ ==  '__main__':
     print QueryPrograms("cctv1")
     print QueryLiveChannels()
     print QueryLiveChannels("cctv1")
+    print QueryClass()
+    print QuerysubClass(1)
