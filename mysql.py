@@ -51,7 +51,7 @@ def QueryPrograms(gid):
         program['program_name'] = item[0]
         program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
         basename = os.path.splitext(item[2])[0]
-        program['url'] = os.path.join(basename, ".jpg")
+        program['url'] = basename + ".jpg"
         program['class'] = item[3]
         program['subclass'] = item[4]
         program['flag'] = item[5]
