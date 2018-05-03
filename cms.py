@@ -13,6 +13,7 @@ import mysql
 import string
 import random
 import daemon
+import subprocess
 
 from tornado.options import define, options
 define("port", default=1111, help="run on the given port", type=int)
@@ -119,15 +120,23 @@ class uploadHandler(BaseHandler):
         gid = self.get_argument("gid")
         subclas = self.get_argument("subclass")
         clas = self.get_argument("class")
-        print title, flag,gid, subclas,clas
         file_metas = self.request.files['video']   
-        for meta in file_metas:
-            suffix = os.path.splitext(meta['filename'])[1]
-            filename = getFileName() + suffix
-            filepath = os.path.join(STORE_PATH, filename)
-            with open(filepath,'wb') as up:
-                up.write(meta['body'])
-            pic = ACCESS_PATH + filename 
+        if len(file_metas) == 0:
+            self.redirect("/")
+
+        meta = file_metas[0]
+        suffix = os.path.splitext(meta['filename'])[1]
+        filename = getFileName() + suffix
+        filepath = os.path.join(STORE_PATH, filename)
+        with open(filepath,'wb') as up:
+            up.write(meta['body'])
+        video = ACCESS_PATH + filename 
+        m = filepath
+        basename = os.path.splitext(m)[0]
+        j =  basename + ".jpg"
+        args = ["ffmpeg", "-i", m, "-s", "100x100", "-loglevel", "quiet", "-frames", "1", "-y", "-f", "image2", j]
+        subprocess.call(args)
+        mysql.uploadProgram(gid, subclas, clas, flag, title, video)
         self.redirect("/pvr?gid=%s"%gid)
 
 class peditHandler(BaseHandler):
@@ -164,7 +173,7 @@ class deleteHandler(BaseHandler):
         self.redirect("/live")
 
 if __name__ == "__main__":
-    daemon.daemonize("/tmp/cms.pid")
+    #daemon.daemonize("/tmp/cms.pid")
     tornado.options.parse_command_line()
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),

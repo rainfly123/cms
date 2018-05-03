@@ -50,6 +50,7 @@ def QueryPrograms(gid):
         program['program_name'] = item[0]
         program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
         program['url'] = item[2].replace(".m3u8", ".jpg")
+        program['url'] = item[2].replace(".mp4", ".jpg")
         program['class'] = item[3]
         program['subclass'] = item[4]
         program['flag'] = item[5]
@@ -190,10 +191,23 @@ def DelProgram(pid):
     cur.close()
     con.close()
 
+def uploadProgram(gid, subclas, clas, flag, title, url):
+    con = getConn()
+    cur =  con.cursor()
+    sql = "insert into vod (gid, program_name, time, url, class, subclass, flag)\
+    values ('%s', '%s', now(), '%s', %s, %s,'%s')" %(gid, title, url, clas, subclas, flag)
+    cur.execute(sql)
+    con.commit()
+    cur.close()
+    con.close()
+
+
+
 if __name__ ==  '__main__':
-    print QueryPrograms("cctv1")
+    #print QueryPrograms("cctv1")
     #print QueryLiveChannels()
     #print QueryLiveChannels("cctv1")
     #print QueryClass()
     #print QuerysubClass(1)
     #print QueryProgramPID(3)
+    uploadProgram("cup", '1','1', "nih好", "牛还", "http://x")
