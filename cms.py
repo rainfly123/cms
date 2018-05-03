@@ -12,6 +12,7 @@ import redi
 import mysql
 import string
 import random
+import daemon
 
 from tornado.options import define, options
 define("port", default=1111, help="run on the given port", type=int)
@@ -159,10 +160,11 @@ class deleteHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         gid = self.get_argument("gid")
-        prog = mysql.DeleteChannel(gid)
+        #prog = mysql.DeleteChannel(gid)
         self.redirect("/live")
 
 if __name__ == "__main__":
+    daemon.daemonize("/tmp/cms.pid")
     tornado.options.parse_command_line()
     settings = {
         "template_path": os.path.join(os.path.dirname(__file__), "templates"),
