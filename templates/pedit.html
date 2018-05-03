@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html> 
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">     
+<meta charset="utf-8">             
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">     
+<meta content="yes" name="apple-mobile-web-app-capable">     
+<meta content="black" name="apple-mobile-web-app-status-bar-style">     
+<meta content="telephone=no" name="format-detection">
+<head> 
+<title>上传</title> 
+<style> 
+</style> 
+</head> 
+<script src="static/jquery-2.1.1.min.js" type="text/javascript"></script>
+<body> 
+<div style="height:10%"></div>
+<div style="text-align:center" >
+<form action="pedit?pid={{program['pid']}}&gid={{program['gid']}}" method="post" enctype="multipart/form-data" >
+<table border="1" align="center" width=84% style="border-collapse:collapse;" >
+  <tr>
+    <th>图片</th>
+    <th>标题</th>
+    <th>录制时间</th>
+    <th>分类</th>
+    <th>子分类</th>
+    <th>标签</th>
+    <th>动作</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="{{program['url']}}" height="100" width="100" /></td>
+    <td align="left"> <input type="text" name="title" value="{{program['program_name']}}"/></td>
+
+    <td align="left">{{program['time']}}</td>
+    <td align="left">
+    <select name="class" id="class">
+    {% for cls in classname %}
+    <option value ="{{cls['class']}}">{{cls['name']}}</option>
+    {% end %}
+   </select>
+   </td>
+    <td align="left">
+    <select name="subclass" id="subclass">
+    </select>
+   </td>
+    <td align="left">
+   <input type="text" name="flag" value="{{program['flag']}}"/> 
+   </td>
+   
+<td><input type="submit" value="保存"/> </td>
+  </tr>
+</table>
+
+</form>
+</div>
+<script>
+$("#class").change(function(){//code...
+svalue=$("#class").val();
+$("#subclass").empty();
+$.get("subclass?class=" + svalue, function(data){
+    var dataObj=eval("("+data+")");
+    subnames = dataObj['data'];
+     $(subnames).each(function(i,n){
+    $("#subclass").append("<option value="+n['subclass'] + ">" + n['name'] + "</option>");
+  });
+    
+  });
+}); 
+
+$("#class").val("{{program['class']}}");
+svalue=$("#class").val();
+$("#subclass").empty();
+$.get("subclass?class=" + svalue, function(data){
+    var dataObj=eval("("+data+")");
+    subnames = dataObj['data'];
+     $(subnames).each(function(i,n){
+    $("#subclass").append("<option value='"+n['subclass'] + "'>" + n['name'] + "</option>");
+  });
+$("#subclass").val("{{program['subclass']}}");
+    
+  });
+
+</script>
+
+</body> 
+</html>

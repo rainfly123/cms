@@ -43,7 +43,7 @@ $.get("subclass?class=" + svalue, function(data){
     var dataObj=eval("("+data+")");
     subnames = dataObj['data'];
      $(subnames).each(function(i,n){
-    $("#subclass").append("<option value="+n['subclass'] + ">" + n['name'] + "</option>");
+    $("#subclass").append("<option value='"+n['subclass'] + "'>" + n['name'] + "</option>");
   });
     
   });

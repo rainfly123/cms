@@ -107,6 +107,33 @@ class uploadHandler(BaseHandler):
         tag = self.get_argument("tag")
         self.render('query.html')
 
+class peditHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        pid = self.get_argument("pid")
+        classname = mysql.QueryClass()
+        prog = mysql.QueryProgramPID(pid)
+        self.render('pedit.html', classname = classname, program = prog)
+
+    def post(self):
+        title = self.get_argument("title")
+        flag = self.get_argument("flag")
+        clas = self.get_argument("class")
+        subclas = self.get_argument("subclass")
+        gid = self.get_argument("gid")
+        pid = self.get_argument("pid")
+        mysql.UpdateProgram(pid, gid, subclas,clas, flag,title)
+        self.redirect("/pvr?gid=%s"%gid)
+
+class pdeleteHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        pid = self.get_argument("pid")
+        gid = self.get_argument("gid")
+        prog = mysql.DelProgram(pid)
+        self.redirect("/pvr?gid=%s"%gid)
+
+
 if __name__ == "__main__":
     tornado.options.parse_command_line()
     settings = {
@@ -120,6 +147,8 @@ if __name__ == "__main__":
     application = tornado.web.Application([
         (r'/', WelcomeHandler),
         (r'/upload', uploadHandler),
+        (r'/pedit', peditHandler),
+        (r'/pdelete', pdeleteHandler),
         (r'/logquery', LogqueryHandler),
         (r'/pvr', pvrHandler),
         (r'/subclass', subclassHandler),

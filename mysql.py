@@ -54,12 +54,13 @@ def QueryPrograms(gid):
         program['subclass'] = item[4]
         program['flag'] = item[5]
         program['pid'] = item[6]
+        program['gid'] = gid
         results.append(program)
         i += 1
 
     for item in results:
         sql = "select class.name, subclass.name from class, subclass where class.class =%d and class.class=subclass.class and\
-            subclass.class=%d"%(item['class'],item['subclass'])
+            subclass.subclass=%d"%(item['class'],item['subclass'])
         cur.execute(sql)
         res = cur.fetchall()
         for ite in res:
@@ -69,6 +70,30 @@ def QueryPrograms(gid):
     cur.close()
     con.close()
     return results
+
+def QueryProgramPID(pid):
+    con = getConn()
+    cur =  con.cursor()
+    program = dict()
+
+    sql = "select program_name, time, url, class, subclass, flag ,gid from vod where id = '{0}'".format(pid)
+    cur.execute(sql)
+    res = cur.fetchall()
+
+    for item in res:
+        program['pid'] = pid
+        program['program_name'] = item[0]
+        program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
+        program['url'] = item[2].replace(".m3u8", ".jpg")
+        program['class'] = item[3]
+        program['subclass'] = item[4]
+        program['flag'] = item[5]
+        program['gid'] = item[6]
+
+    cur.close()
+    con.close()
+    return program
+
 
 def QueryLiveChannels(gid=None):
     results = list()
@@ -136,11 +161,29 @@ def QuerysubClass(classid):
     con.close()
     return results
 
+def UpdateProgram(pid, gid, subclas, clas, flag, title):
+    print (pid, gid, subclas,clas, flag,title)
+    con = getConn()
+    cur =  con.cursor()
+    sql = "update vod set class=%s,subclass=%s,flag='%s',program_name='%s' where id=%s"%(clas, subclas, flag, title,pid)
+    cur.execute(sql)
+    con.commit()
+    cur.close()
+    con.close()
 
+def DelProgram(pid):
+    con = getConn()
+    cur =  con.cursor()
+    sql = "delete from vod where id=%s"%(pid)
+    cur.execute(sql)
+    con.commit()
+    cur.close()
+    con.close()
 
 if __name__ ==  '__main__':
     print QueryPrograms("cctv1")
-    print QueryLiveChannels()
-    print QueryLiveChannels("cctv1")
-    print QueryClass()
-    print QuerysubClass(1)
+    #print QueryLiveChannels()
+    #print QueryLiveChannels("cctv1")
+    #print QueryClass()
+    #print QuerysubClass(1)
+    #print QueryProgramPID(3)
