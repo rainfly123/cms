@@ -155,6 +155,12 @@ class pdeleteHandler(BaseHandler):
         prog = mysql.DelProgram(pid)
         self.redirect("/pvr?gid=%s"%gid)
 
+class deleteHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        gid = self.get_argument("gid")
+        prog = mysql.DeleteChannel(gid)
+        self.redirect("/live")
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -171,6 +177,7 @@ if __name__ == "__main__":
         (r'/upload', uploadHandler),
         (r'/pedit', peditHandler),
         (r'/pdelete', pdeleteHandler),
+        (r'/delete', deleteHandler),
         (r'/logquery', LogqueryHandler),
         (r'/pvr', pvrHandler),
         (r'/subclass', subclassHandler),

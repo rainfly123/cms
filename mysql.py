@@ -123,6 +123,16 @@ def QueryLiveChannels(gid=None):
     con.close()
     return results
 
+def DeleteChannel(gid):
+    con = getConn()
+    cur =  con.cursor()
+    sql = "delete from live where gid=%s"%(gid)
+    cur.execute(sql)
+    con.commit()
+    cur.close()
+    con.close()
+
+
 def QueryClass():
     results = list()
     con = getConn()
