@@ -100,12 +100,15 @@ class uploadHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         classname = mysql.QueryClass()
-        self.render('upload.html', user=self.current_user, classname = classname)
+        self.render('upload.html', classname = classname)
 
     def post(self):
         title = self.get_argument("title")
-        tag = self.get_argument("tag")
-        self.render('query.html')
+        flag = self.get_argument("flag")
+        gid = self.get_argument("gid")
+        subclas = self.get_argument("subclass")
+        clas = self.get_argument("class")
+        self.redirect("/pvr?gid=%s"%gid)
 
 class peditHandler(BaseHandler):
     @tornado.web.authenticated
