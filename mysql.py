@@ -7,6 +7,7 @@ import string
 from DBUtils.PooledDB import PooledDB
 import dbconfig
 import datetime
+import os
 
 
 ERROR = {0:"OK", 1:"Parameter Error", 2:"Database Error", 3:u"您已赞", 4:u"你无权开通直播"}
@@ -49,8 +50,8 @@ def QueryPrograms(gid):
         program['id'] = i
         program['program_name'] = item[0]
         program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
-        program['url'] = item[2].replace(".m3u8", ".jpg")
-        program['url'] = item[2].replace(".mp4", ".jpg")
+        basename = os.path.splitext(item[2])[0]
+        program['url'] = os.path.join(basename, ".jpg")
         program['class'] = item[3]
         program['subclass'] = item[4]
         program['flag'] = item[5]
