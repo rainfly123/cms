@@ -50,6 +50,17 @@ $.get("subclass?class=" + svalue, function(data){
   });
 
 }); 
+$("#class").val("1");
+svalue=$("#class").val();
+$("#subclass").empty();
+$.get("subclass?class=" + svalue, function(data){
+    var dataObj=eval("("+data+")");
+    subnames = dataObj['data'];
+     $(subnames).each(function(i,n){
+    $("#subclass").append("<option value='"+n['subclass'] + "'>" + n['name'] + "</option>");
+  });
+$("#subclass").val("1");})
+ 
 </script>
 
 </body> 

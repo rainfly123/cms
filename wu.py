@@ -10,9 +10,19 @@ import os.path
 import json
 import redi
 import mysql
+import string
+import random
 
 from tornado.options import define, options
 define("port", default=1111, help="run on the given port", type=int)
+
+STORE_PATH="/data/upload/"
+ACCESS_PATH="http://southtv.kmdns.net:2935/upload/"
+def getFileName():
+    source = list(string.lowercase) 
+    random.shuffle(source)
+    temp = source[:15]
+    return "".join(temp)
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -108,6 +118,15 @@ class uploadHandler(BaseHandler):
         gid = self.get_argument("gid")
         subclas = self.get_argument("subclass")
         clas = self.get_argument("class")
+        print title, flag,gid, subclas,clas
+        file_metas = self.request.files['video']   
+        for meta in file_metas:
+            suffix = os.path.splitext(meta['filename'])[1]
+            filename = getFileName() + suffix
+            filepath = os.path.join(STORE_PATH, filename)
+            with open(filepath,'wb') as up:
+                up.write(meta['body'])
+            pic = ACCESS_PATH + filename 
         self.redirect("/pvr?gid=%s"%gid)
 
 class peditHandler(BaseHandler):
