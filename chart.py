@@ -37,17 +37,27 @@ def QueryPrograms():
     sql = "select gid from access group by gid"
     cur.execute(sql)
     res = cur.fetchall()
-    which = 7
     now  = datetime.datetime.now()
     for item in res:
-        print item[0]
         results[item[0]] = list()
-    for x in range(7):
-        start = now - datetime.timedelta(which, 0, 0)
-        end = now - datetime.timedelta(which - 1, 0, 0)
-        which -= 1
-        print start.strftime("%Y-%m-%d 00:00:00")
-        print end.strftime("%Y-%m-%d 00:00:00")
+
+    results["all"] = list()
+    channels = results.keys()
+    for channel in channels:
+        for x in (7, 6, 5, 4, 3, 2, 1):
+            start = now - datetime.timedelta(x, 0, 0)
+            end = now - datetime.timedelta(x - 1, 0, 0)
+            sstr = start.strftime("%Y-%m-%d 00:00:00")
+            endstr = end.strftime("%Y-%m-%d 00:00:00")
+            sql = "select count(*) from access where gid = '%s' and time >= '%s' and time < '%s'"%(channel, sstr, endstr)
+            cur.execute(sql)
+            res = cur.fetchall()
+            total = res[0][0]
+            results[channel].append(total)
+
+    for channel in channels:
+       for x in (0, 1, 2, 3, 4, 5, 6):
+           results['all'][x] += results[channel][x]
 
     cur.close()
     con.close()
