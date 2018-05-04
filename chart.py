@@ -17,7 +17,7 @@ class DbManager():
         kwargs['port'] =  int(DBConfig.getConfig('database', 'dbport'))
         kwargs['user'] =  DBConfig.getConfig('database', 'dbuser')
         kwargs['passwd'] =  DBConfig.getConfig('database', 'dbpassword')
-        kwargs['db'] =  'chart'
+        kwargs['db'] =  DBConfig.getConfig('database', 'dbname')
         kwargs['charset'] =  DBConfig.getConfig('database', 'dbcharset')
         self._pool = PooledDB(MySQLdb, mincached=1, maxcached=15, maxshared=10, maxusage=10000, **kwargs)
 
@@ -29,34 +29,29 @@ _dbManager = DbManager()
 def getConn():
     return _dbManager.getConn()
 
-def QueryPrograms(gid):
-    results = list()
-    i = 0
+def QueryPrograms():
+    results = dict()
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select program_name, time, url, class, subclass, flag, id from vod where gid = '{0}' and url != '' ".format(gid)
+    sql = "select gid from access group by gid"
     cur.execute(sql)
     res = cur.fetchall()
-    now = datetime.datetime.now()
-
+    which = 7
+    now  = datetime.datetime.now()
     for item in res:
-        program = dict()
-        program['id'] = i
-        program['program_name'] = item[0]
-        program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
-        basename = os.path.splitext(item[2])[0]
-        program['url'] = basename + ".jpg"
-        program['class'] = item[3]
-        program['subclass'] = item[4]
-        program['flag'] = item[5]
-        program['pid'] = item[6]
-        program['gid'] = gid
-        results.append(program)
-        i += 1
+        print item[0]
+        results[item[0]] = list()
+    for x in range(7):
+        start = now - datetime.timedelta(which, 0, 0)
+        end = now - datetime.timedelta(which - 1, 0, 0)
+        which -= 1
+        print start.strftime("%Y-%m-%d 00:00:00")
+        print end.strftime("%Y-%m-%d 00:00:00")
 
     cur.close()
     con.close()
+    print results
     return results
 
 
@@ -71,3 +66,4 @@ def DeleteChannel(gid):
 
 
 if __name__ ==  '__main__':
+    QueryPrograms()
