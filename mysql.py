@@ -40,7 +40,7 @@ def QueryPrograms(gid):
     con = getConn()
     cur =  con.cursor()
 
-    sql = "select program_name, time, url, class, subclass, flag, id from vod where gid = '{0}' and url != '' ".format(gid)
+    sql = "select program_name, time, url, class, subclass, flag, id from vod where no_del = 0 and gid = '{0}' and url != '' ".format(gid)
     cur.execute(sql)
     res = cur.fetchall()
     now = datetime.datetime.now()
@@ -72,6 +72,47 @@ def QueryPrograms(gid):
     cur.close()
     con.close()
     return results
+
+def QueryVod(gid):
+    results = list()
+    i = 0
+    con = getConn()
+    cur =  con.cursor()
+
+    sql = "select program_name, time, url, class, subclass, flag, id from vod where no_del = 1 and gid = '{0}' and url != '' ".format(gid)
+    cur.execute(sql)
+    res = cur.fetchall()
+    now = datetime.datetime.now()
+
+    for item in res:
+        program = dict()
+        program['id'] = i
+        program['program_name'] = item[0]
+        program['time'] = item[1].strftime("%Y-%m-%d %H:%M")
+        basename = os.path.splitext(item[2])[0]
+        program['url'] = basename + ".jpg"
+        program['class'] = item[3]
+        program['subclass'] = item[4]
+        program['flag'] = item[5]
+        program['pid'] = item[6]
+        program['gid'] = gid
+        results.append(program)
+        i += 1
+
+    for item in results:
+        sql = "select class.name, subclass.name from class, subclass where class.class =%d and class.class=subclass.class and\
+            subclass.subclass=%d"%(item['class'],item['subclass'])
+        cur.execute(sql)
+        res = cur.fetchall()
+        for ite in res:
+            item['class'] = ite[0]
+            item['subclass'] = ite[1]
+
+    cur.close()
+    con.close()
+    return results
+
+
 
 def QueryProgramPID(pid):
     con = getConn()

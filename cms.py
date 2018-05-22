@@ -60,6 +60,17 @@ class pvrHandler(BaseHandler):
         prog = mysql.QueryPrograms(gid)
         self.render("pvr.html", channels = chan, programs = prog)
 
+class vodHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        gid = self.get_argument("gid")
+        if gid is None:
+            gid = "cctv1"
+        chan = mysql.QueryLiveChannels()
+        prog = mysql.QueryVod(gid)
+        self.render("vod.html", channels = chan, programs = prog)
+
+
 class liveHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -191,6 +202,7 @@ if __name__ == "__main__":
         (r'/delete', deleteHandler),
         (r'/logquery', LogqueryHandler),
         (r'/pvr', pvrHandler),
+        (r'/vod', vodHandler),
         (r'/subclass', subclassHandler),
         (r'/live', liveHandler),
         (r'/login', LoginHandler),
