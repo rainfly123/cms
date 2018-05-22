@@ -168,6 +168,8 @@ class peditHandler(BaseHandler):
         no_del = self.get_argument("no_del", default="off")
         if no_del == "on":
             mysql.UpdateProgram(pid, gid, subclas,clas, flag, title, True)
+        else:
+            mysql.UpdateProgram(pid, gid, subclas,clas, flag, title)
         self.redirect("/pvr?gid=%s"%gid)
 
 class pdeleteHandler(BaseHandler):
