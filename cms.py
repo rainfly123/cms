@@ -165,7 +165,9 @@ class peditHandler(BaseHandler):
         subclas = self.get_argument("subclass")
         gid = self.get_argument("gid")
         pid = self.get_argument("pid")
-        mysql.UpdateProgram(pid, gid, subclas,clas, flag,title)
+        no_del = self.get_argument("no_del", default="off")
+        if no_del == "on":
+            mysql.UpdateProgram(pid, gid, subclas,clas, flag, title, True)
         self.redirect("/pvr?gid=%s"%gid)
 
 class pdeleteHandler(BaseHandler):

@@ -214,11 +214,14 @@ def QuerysubClass(classid):
     con.close()
     return results
 
-def UpdateProgram(pid, gid, subclas, clas, flag, title):
+def UpdateProgram(pid, gid, subclas, clas, flag, title, no_del=False):
     print (pid, gid, subclas,clas, flag,title)
     con = getConn()
     cur =  con.cursor()
-    sql = "update vod set class=%s,subclass=%s,flag='%s',program_name='%s' where id=%s"%(clas, subclas, flag, title,pid)
+    if no_del:
+        sql = "update vod set class=%s,subclass=%s,flag='%s',program_name='%s', no_del=1 where id=%s"%(clas, subclas, flag, title,pid)
+    else:
+        sql = "update vod set class=%s,subclass=%s,flag='%s',program_name='%s' where id=%s"%(clas, subclas, flag, title,pid)
     cur.execute(sql)
     con.commit()
     cur.close()
